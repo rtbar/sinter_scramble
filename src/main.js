@@ -11,6 +11,7 @@ const imageModules = import.meta.glob('./assets/photo_*.jpg', { eager: true, que
 // If no photo_*.jpg found, check for just photo.jpg as a fallback for level 1
 // Note: import.meta.glob returns an object with paths as keys.
 let levelImages = Object.keys(imageModules)
+    .filter(path => path.match(/photo_\d+\.jpg$/)) // Only include numbered photos (excludes photo_final.jpg)
     .sort((a, b) => {
         // Extract number from filename to sort correctly (photo_1, photo_2, photo_10)
         const numA = parseInt(a.match(/photo_(\d+)\.jpg$/)?.[1] || 0);
@@ -172,7 +173,7 @@ function checkWin() {
 
 // Debug helper
 document.addEventListener('keydown', (e) => {
-    if (e.key === 'd') {
+    if (e.altKey && e.key === 'd') {
         document.body.classList.toggle('debug-mode');
         console.log('Debug mode toggled');
     }
@@ -199,12 +200,47 @@ function showWinModal() {
         // Final level
         modalTitleEl.textContent = 'Decryption Successful';
         modalMessageEl.textContent = 'All containers unlocked. Data retrieved.';
-        nextLevelBtn.textContent = 'Restart System';
+        nextLevelBtn.textContent = 'Open Decrypted Container';
         nextLevelBtn.onclick = () => {
-            currentLevel = 0;
-            initGame();
+            showFinalReward();
         };
     }
+}
+
+function showFinalReward() {
+    // Hide modal
+    modalEl.classList.add('hidden');
+
+    // Clear board and show final image
+    boardEl.innerHTML = '';
+    boardEl.style.display = 'flex';
+    boardEl.style.justifyContent = 'center';
+    boardEl.style.alignItems = 'center';
+    boardEl.style.background = 'none';
+    boardEl.style.border = 'none';
+    boardEl.style.boxShadow = 'none';
+
+    // Try to load photo_final.jpg, fallback to placeholder
+    const finalImageModules = import.meta.glob('./assets/photo_final.jpg', { eager: true, query: '?url', import: 'default' });
+    let finalImageUrl = 'https://picsum.photos/450/450';
+
+    if (Object.keys(finalImageModules).length > 0) {
+        finalImageUrl = Object.values(finalImageModules)[0];
+    }
+
+    const img = document.createElement('img');
+    img.src = finalImageUrl;
+    img.style.maxWidth = '100%';
+    img.style.maxHeight = '100%';
+    img.style.borderRadius = '8px';
+    img.style.boxShadow = '0 0 20px rgba(255, 215, 0, 0.5)';
+
+    boardEl.appendChild(img);
+
+    // Update title
+    levelIndicatorEl.textContent = 'Go get me, Maarten!';
+    levelIndicatorEl.style.color = '#FFD700';
+    levelIndicatorEl.style.textShadow = '0 0 10px rgba(255, 215, 0, 0.5)';
 }
 
 // Start
