@@ -1,0 +1,146 @@
+:root {
+  --board-size: 450px; /* 3x150px */
+  --tile-size: 150px;
+  --gap: 2px;
+  --bg-color: #f0f4f8;
+  --primary-color: #333;
+  --accent-color: #4a90e2;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--bg-color);
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  color: var(--primary-color);
+}
+
+#app {
+  text-align: center;
+  padding: 20px;
+}
+
+h1 {
+  margin-bottom: 0.5rem;
+}
+
+.instructions {
+  margin-bottom: 2rem;
+  color: #666;
+}
+
+.game-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+.board {
+  width: var(--board-size);
+  height: var(--board-size);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: var(--gap);
+  background-color: #ddd;
+  border: 5px solid #fff;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  position: relative;
+}
+
+.drop-zone {
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255,255,255,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+  color: rgba(0,0,0,0.1);
+  border: 1px dashed #ccc;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.pieces-panel {
+  width: var(--board-size);
+  min-height: 160px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.tile {
+  width: var(--tile-size);
+  height: var(--tile-size);
+  cursor: grab;
+  background-size: var(--board-size) var(--board-size);
+  transition: transform 0.2s;
+  touch-action: none;
+}
+
+.tile:active {
+  cursor: grabbing;
+  transform: scale(1.05);
+  z-index: 100;
+}
+
+.tile.dragging {
+  opacity: 0.5;
+}
+
+/* Modal */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal.hidden {
+  display: none;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  animation: popIn 0.3s ease-out;
+}
+
+@keyframes popIn {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+button {
+  background-color: var(--accent-color);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-top: 1rem;
+}
+
+button:hover {
+  background-color: #357abd;
+}
