@@ -1,0 +1,36 @@
+/* Debug Mode */
+.debug-mode .tile {
+    position: relative;
+}
+
+.debug-mode .tile::after {
+    content: attr(data-correct-index);
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 14px;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+.debug-mode .drop-zone {
+    position: relative;
+}
+
+.debug-mode .drop-zone::before {
+    content: attr(data-index);
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background: rgba(255, 255, 255, 0.7);
+    color: black;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 14px;
+    pointer-events: none;
+    z-index: 900;
+}

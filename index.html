@@ -10,8 +10,7 @@
 
 <body>
   <div id="app">
-    <h1>Sinter Scramble</h1>
-    <p class="instructions">Drag the tiles to the correct position on the board!</p>
+    <h1 id="level-indicator">Container 1/1</h1>
 
     <div class="game-container">
       <div id="board" class="board">
@@ -21,9 +20,9 @@
 
     <div id="congrats-modal" class="modal hidden">
       <div class="modal-content">
-        <h2>Congratulations!</h2>
-        <p>You solved the puzzle!</p>
-        <button id="restart-btn">Play Again</button>
+        <h2 id="modal-title">Congratulations!</h2>
+        <p id="modal-message">You solved the puzzle!</p>
+        <button id="next-level-btn">Proceed</button>
       </div>
     </div>
   </div>

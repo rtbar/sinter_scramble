@@ -1,32 +1,58 @@
+import './debug.css';
 import './style.css';
 
 // Configuration
 const BOARD_SIZE = 3; // 3x3
 const TILE_SIZE = 150; // px
 
-// Use a placeholder image for demonstration. 
-// User can replace this with a local asset.
-// To use a local image:
-// 1. Place your image in src/assets/image.jpg
-// 2. Uncomment the import line below
-// 3. Use the imported variable
-// import localImage from './assets/image.jpg';
-// src/main.js
-import myImage from './assets/photo.jpg'; // Add this line
+// Load all photo_*.jpg files from assets
+const imageModules = import.meta.glob('./assets/photo_*.jpg', { eager: true, query: '?url', import: 'default' });
 
-// Update this line
-const IMAGE_URL = myImage;
+// If no photo_*.jpg found, check for just photo.jpg as a fallback for level 1
+// Note: import.meta.glob returns an object with paths as keys.
+let levelImages = Object.keys(imageModules)
+    .sort((a, b) => {
+        // Extract number from filename to sort correctly (photo_1, photo_2, photo_10)
+        const numA = parseInt(a.match(/photo_(\d+)\.jpg$/)?.[1] || 0);
+        const numB = parseInt(b.match(/photo_(\d+)\.jpg$/)?.[1] || 0);
+        return numA - numB;
+    })
+    .map(path => imageModules[path]);
+
+// Fallback if no numbered photos found, try to see if we have any images at all or use placeholder
+if (levelImages.length === 0) {
+    // We can't easily check for 'photo.jpg' dynamically without globbing it too.
+    // Let's assume the user might have 'photo.jpg' and we want to use it as level 1.
+    const fallbackModules = import.meta.glob('./assets/photo.jpg', { eager: true, query: '?url', import: 'default' });
+    if (Object.keys(fallbackModules).length > 0) {
+        levelImages = Object.values(fallbackModules);
+    } else {
+        // Absolute fallback
+        levelImages = ['https://picsum.photos/450/450'];
+    }
+}
+
+let currentLevel = 0;
+
 const boardEl = document.getElementById('board');
 const modalEl = document.getElementById('congrats-modal');
-const restartBtn = document.getElementById('restart-btn');
+const modalTitleEl = document.getElementById('modal-title');
+const modalMessageEl = document.getElementById('modal-message');
+const nextLevelBtn = document.getElementById('next-level-btn');
+const levelIndicatorEl = document.getElementById('level-indicator');
 
 let tiles = [];
 
 function initGame() {
+    // Update Level Indicator
+    levelIndicatorEl.textContent = `Container ${currentLevel + 1}/${levelImages.length}`;
+
     // Clear existing
     boardEl.innerHTML = '';
     modalEl.classList.add('hidden');
     tiles = [];
+
+    const currentImageUrl = levelImages[currentLevel];
 
     // Create drop zones
     for (let i = 0; i < BOARD_SIZE * BOARD_SIZE; i++) {
@@ -52,8 +78,8 @@ function initGame() {
         // Set background
         const row = Math.floor(i / BOARD_SIZE);
         const col = i % BOARD_SIZE;
-        // Use localImage if you imported it, otherwise IMAGE_URL
-        tile.style.backgroundImage = `url(${IMAGE_URL})`;
+
+        tile.style.backgroundImage = `url(${currentImageUrl})`;
         tile.style.backgroundPosition = `-${col * TILE_SIZE}px -${row * TILE_SIZE}px`;
 
         // Drag events
@@ -115,25 +141,71 @@ function checkWin() {
     const zones = document.querySelectorAll('.drop-zone');
     let correctCount = 0;
 
+    console.group('Check Win Status');
     zones.forEach(zone => {
         const tile = zone.querySelector('.tile');
         if (tile) {
             const zoneIndex = parseInt(zone.dataset.index);
             const tileIndex = parseInt(tile.dataset.correctIndex);
-            if (zoneIndex === tileIndex) {
+            const isCorrect = zoneIndex === tileIndex;
+
+            if (isCorrect) {
                 correctCount++;
+            } else {
+                console.log(`Mismatch: Zone ${zoneIndex} has Tile ${tileIndex}`);
             }
+        } else {
+            console.log(`Empty Zone: ${zone.dataset.index}`);
         }
     });
+    console.groupEnd();
+
+    console.log(`Correct tiles: ${correctCount}/${BOARD_SIZE * BOARD_SIZE}`);
 
     if (correctCount === BOARD_SIZE * BOARD_SIZE) {
+        console.log('Puzzle Solved! Triggering modal...');
         setTimeout(() => {
-            modalEl.classList.remove('hidden');
+            showWinModal();
         }, 200);
     }
 }
 
-restartBtn.addEventListener('click', initGame);
+// Debug helper
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'd') {
+        document.body.classList.toggle('debug-mode');
+        console.log('Debug mode toggled');
+    }
+});
+
+function showWinModal() {
+    console.log('showWinModal executing...');
+    if (!modalEl) {
+        console.error('Modal element missing!');
+        return;
+    }
+    modalEl.classList.remove('hidden');
+
+    if (currentLevel < levelImages.length - 1) {
+        // Intermediate level
+        modalTitleEl.textContent = 'Access Granted';
+        modalMessageEl.textContent = `Correct key hash entered. Container ${currentLevel + 1}/${levelImages.length} has been unlocked.`;
+        nextLevelBtn.textContent = 'Proceed';
+        nextLevelBtn.onclick = () => {
+            currentLevel++;
+            initGame();
+        };
+    } else {
+        // Final level
+        modalTitleEl.textContent = 'Decryption Successful';
+        modalMessageEl.textContent = 'All containers unlocked. Data retrieved.';
+        nextLevelBtn.textContent = 'Restart System';
+        nextLevelBtn.onclick = () => {
+            currentLevel = 0;
+            initGame();
+        };
+    }
+}
 
 // Start
 initGame();
