@@ -1,10 +1,14 @@
 :root {
-  --board-size: 450px; /* 3x150px */
+  --board-size: 450px;
+  /* 3x150px */
   --tile-size: 150px;
   --gap: 2px;
-  --bg-color: #f0f4f8;
-  --primary-color: #333;
-  --accent-color: #4a90e2;
+  --bg-color: #1a1a1a;
+  --primary-color: #FFD700;
+  /* Gold */
+  --accent-color: #C0392B;
+  /* Sinterklaas Red */
+  --text-color: #f0f0f0;
 }
 
 body {
@@ -15,7 +19,7 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  color: var(--primary-color);
+  color: var(--text-color);
 }
 
 #app {
@@ -29,7 +33,7 @@ h1 {
 
 .instructions {
   margin-bottom: 2rem;
-  color: #666;
+  color: var(--primary-color);
 }
 
 .game-container {
@@ -46,38 +50,28 @@ h1 {
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
   gap: var(--gap);
-  background-color: #ddd;
-  border: 5px solid #fff;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  background-color: var(--primary-color);
+  border: 8px solid var(--accent-color);
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
   position: relative;
+  border-radius: 4px;
 }
 
 .drop-zone {
   width: 100%;
   height: 100%;
-  background-color: rgba(255,255,255,0.5);
+  background-color: rgba(255, 255, 255, 0.1);
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 2rem;
-  color: rgba(0,0,0,0.1);
-  border: 1px dashed #ccc;
+  color: rgba(255, 255, 255, 0.2);
+  border: 1px dashed rgba(255, 215, 0, 0.3);
   box-sizing: border-box;
   position: relative;
 }
 
-.pieces-panel {
-  width: var(--board-size);
-  min-height: 160px;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px;
-  padding: 10px;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-}
+
 
 .tile {
   width: var(--tile-size);
@@ -105,7 +99,7 @@ h1 {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0,0,0,0.5);
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -117,17 +111,26 @@ h1 {
 }
 
 .modal-content {
-  background-color: white;
+  background-color: var(--bg-color);
+  color: var(--primary-color);
   padding: 2rem;
   border-radius: 10px;
   text-align: center;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+  border: 2px solid var(--accent-color);
   animation: popIn 0.3s ease-out;
 }
 
 @keyframes popIn {
-  from { transform: scale(0.8); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 button {

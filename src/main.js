@@ -17,7 +17,6 @@ import myImage from './assets/photo.jpg'; // Add this line
 // Update this line
 const IMAGE_URL = myImage;
 const boardEl = document.getElementById('board');
-const piecesPanelEl = document.getElementById('pieces-panel');
 const modalEl = document.getElementById('congrats-modal');
 const restartBtn = document.getElementById('restart-btn');
 
@@ -26,7 +25,6 @@ let tiles = [];
 function initGame() {
     // Clear existing
     boardEl.innerHTML = '';
-    piecesPanelEl.innerHTML = '';
     modalEl.classList.add('hidden');
     tiles = [];
 
@@ -65,10 +63,11 @@ function initGame() {
         tiles.push(tile);
     }
 
-    // Shuffle and place in panel
+    // Shuffle and place in board zones
     const shuffledTiles = [...tiles].sort(() => Math.random() - 0.5);
-    shuffledTiles.forEach(tile => {
-        piecesPanelEl.appendChild(tile);
+    const zones = document.querySelectorAll('.drop-zone');
+    shuffledTiles.forEach((tile, index) => {
+        zones[index].appendChild(tile);
     });
 }
 
@@ -89,12 +88,10 @@ function handleDragOver(e) {
     e.preventDefault(); // Necessary to allow dropping
     e.dataTransfer.dropEffect = 'move';
 }
-
 function handleDrop(e) {
     e.preventDefault();
-    // Find the closest drop zone or panel
+    // Find the closest drop zone
     const zone = e.target.closest('.drop-zone');
-    const panel = e.target.closest('.pieces-panel');
 
     if (zone && draggedTile) {
         // Check if zone already has a tile
@@ -110,15 +107,8 @@ function handleDrop(e) {
         }
 
         checkWin();
-    } else if (panel && draggedTile) {
-        // Allow moving back to panel
-        panel.appendChild(draggedTile);
     }
 }
-
-// Add drop listener to panel too, to allow moving back
-piecesPanelEl.addEventListener('dragover', handleDragOver);
-piecesPanelEl.addEventListener('drop', handleDrop);
 
 
 function checkWin() {

@@ -1,34 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sinter Scramble</title>
-  </head>
-  <body>
-    <div id="app">
-      <h1>Sinter Scramble</h1>
-      <p class="instructions">Drag the tiles to the correct position on the board!</p>
-      
-      <div class="game-container">
-        <div id="board" class="board">
-          <!-- Drop zones will be generated here -->
-        </div>
-        
-        <div id="pieces-panel" class="pieces-panel">
-          <!-- Draggable pieces will be generated here -->
-        </div>
-      </div>
 
-      <div id="congrats-modal" class="modal hidden">
-        <div class="modal-content">
-          <h2>Congratulations!</h2>
-          <p>You solved the puzzle!</p>
-          <button id="restart-btn">Play Again</button>
-        </div>
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sinter Scramble</title>
+</head>
+
+<body>
+  <div id="app">
+    <h1>Sinter Scramble</h1>
+    <p class="instructions">Drag the tiles to the correct position on the board!</p>
+
+    <div class="game-container">
+      <div id="board" class="board">
+        <!-- Drop zones will be generated here -->
       </div>
     </div>
-    <script type="module" src="/src/main.js"></script>
-  </body>
+
+    <div id="congrats-modal" class="modal hidden">
+      <div class="modal-content">
+        <h2>Congratulations!</h2>
+        <p>You solved the puzzle!</p>
+        <button id="restart-btn">Play Again</button>
+      </div>
+    </div>
+  </div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+
 </html>
