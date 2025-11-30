@@ -188,10 +188,10 @@ function showWinModal() {
         console.error('Modal element missing!');
         return;
     }
-    
+
     // Show modal
     modalEl.classList.remove('hidden');
-    
+
     // Configure Close button
     closeModalBtn.onclick = () => {
         modalEl.classList.add('hidden');
@@ -204,7 +204,7 @@ function showWinModal() {
         // Intermediate level
         modalTitleEl.textContent = 'Access Granted';
         modalMessageEl.textContent = `Correct key hash entered. Container ${currentLevel + 1}/${levelImages.length} has been unlocked.`;
-        
+
         continueBtn.textContent = 'Proceed to Next Container';
         continueBtn.onclick = () => {
             currentLevel++;
@@ -214,7 +214,7 @@ function showWinModal() {
         // Final level
         modalTitleEl.textContent = 'Decryption Successful';
         modalMessageEl.textContent = 'All containers unlocked. Data retrieved.';
-        
+
         continueBtn.textContent = 'Open Decrypted Container';
         continueBtn.onclick = () => {
             showFinalReward();
