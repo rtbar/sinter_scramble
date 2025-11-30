@@ -1,0 +1,14 @@
+/* Solved State */
+.board.solved {
+    gap: 0;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
+}
+
+.board.solved .drop-zone {
+    border: none;
+}
+
+.board.solved .tile {
+    cursor: default;
+}

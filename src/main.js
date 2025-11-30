@@ -1,4 +1,5 @@
 import './debug.css';
+import './solved.css';
 import './style.css';
 
 // Configuration
@@ -52,6 +53,7 @@ function initGame() {
 
     // Clear existing
     boardEl.innerHTML = '';
+    boardEl.classList.remove('solved');
     modalEl.classList.add('hidden');
     controlsContainerEl.classList.add('hidden');
     tiles = [];
@@ -191,6 +193,9 @@ function showWinModal() {
 
     // Show modal
     modalEl.classList.remove('hidden');
+
+    // Mark board as solved
+    boardEl.classList.add('solved');
 
     // Configure Close button
     closeModalBtn.onclick = () => {
