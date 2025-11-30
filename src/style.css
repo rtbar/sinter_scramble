@@ -43,6 +43,14 @@ h1 {
   gap: 2rem;
 }
 
+.controls-container {
+  margin-top: 1rem;
+}
+
+.hidden {
+  display: none !important;
+}
+
 .board {
   width: var(--board-size);
   height: var(--board-size);

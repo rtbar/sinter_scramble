@@ -39,7 +39,9 @@ const boardEl = document.getElementById('board');
 const modalEl = document.getElementById('congrats-modal');
 const modalTitleEl = document.getElementById('modal-title');
 const modalMessageEl = document.getElementById('modal-message');
-const nextLevelBtn = document.getElementById('next-level-btn');
+const closeModalBtn = document.getElementById('close-modal-btn');
+const continueBtn = document.getElementById('continue-btn');
+const controlsContainerEl = document.getElementById('controls-container');
 const levelIndicatorEl = document.getElementById('level-indicator');
 
 let tiles = [];
@@ -51,6 +53,7 @@ function initGame() {
     // Clear existing
     boardEl.innerHTML = '';
     modalEl.classList.add('hidden');
+    controlsContainerEl.classList.add('hidden');
     tiles = [];
 
     const currentImageUrl = levelImages[currentLevel];
@@ -185,14 +188,25 @@ function showWinModal() {
         console.error('Modal element missing!');
         return;
     }
+    
+    // Show modal
     modalEl.classList.remove('hidden');
+    
+    // Configure Close button
+    closeModalBtn.onclick = () => {
+        modalEl.classList.add('hidden');
+    };
+
+    // Show controls container
+    controlsContainerEl.classList.remove('hidden');
 
     if (currentLevel < levelImages.length - 1) {
         // Intermediate level
         modalTitleEl.textContent = 'Access Granted';
         modalMessageEl.textContent = `Correct key hash entered. Container ${currentLevel + 1}/${levelImages.length} has been unlocked.`;
-        nextLevelBtn.textContent = 'Proceed';
-        nextLevelBtn.onclick = () => {
+        
+        continueBtn.textContent = 'Proceed to Next Container';
+        continueBtn.onclick = () => {
             currentLevel++;
             initGame();
         };
@@ -200,16 +214,18 @@ function showWinModal() {
         // Final level
         modalTitleEl.textContent = 'Decryption Successful';
         modalMessageEl.textContent = 'All containers unlocked. Data retrieved.';
-        nextLevelBtn.textContent = 'Open Decrypted Container';
-        nextLevelBtn.onclick = () => {
+        
+        continueBtn.textContent = 'Open Decrypted Container';
+        continueBtn.onclick = () => {
             showFinalReward();
         };
     }
 }
 
 function showFinalReward() {
-    // Hide modal
+    // Hide modal and controls
     modalEl.classList.add('hidden');
+    controlsContainerEl.classList.add('hidden');
 
     // Clear board and show final image
     boardEl.innerHTML = '';
