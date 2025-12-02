@@ -33,7 +33,11 @@ if (levelImages.length === 0) {
     }
 }
 
-let currentLevel = 0;
+let currentLevel = parseInt(localStorage.getItem('sinter_scramble_level') || '0');
+// Ensure level is valid (e.g. if images were removed)
+if (currentLevel >= levelImages.length || currentLevel < 0) {
+    currentLevel = 0;
+}
 
 const boardEl = document.getElementById('board');
 const modalEl = document.getElementById('congrats-modal');
@@ -293,6 +297,7 @@ function showWinModal() {
         continueBtn.textContent = 'Proceed to Next Container';
         continueBtn.onclick = () => {
             currentLevel++;
+            localStorage.setItem('sinter_scramble_level', currentLevel);
             initGame();
         };
     } else {
