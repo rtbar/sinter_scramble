@@ -106,11 +106,38 @@ function initGame() {
     }
 
     // Shuffle and place in board zones
-    const shuffledTiles = [...tiles].sort(() => Math.random() - 0.5);
+    const savedState = localStorage.getItem(`sinter_scramble_state_level_${currentLevel}`);
     const zones = document.querySelectorAll('.drop-zone');
-    shuffledTiles.forEach((tile, index) => {
-        zones[index].appendChild(tile);
-    });
+
+    if (savedState) {
+        try {
+            const state = JSON.parse(savedState);
+            state.forEach((correctIndex, zoneIndex) => {
+                if (correctIndex !== null) {
+                    const tile = tiles.find(t => parseInt(t.dataset.correctIndex) === correctIndex);
+                    if (tile) {
+                        zones[zoneIndex].appendChild(tile);
+                    }
+                }
+            });
+            // Check if already won (to restore solved state)
+            checkWin();
+        } catch (e) {
+            console.error('Failed to load saved state', e);
+            // Fallback to shuffle
+            const shuffledTiles = [...tiles].sort(() => Math.random() - 0.5);
+            shuffledTiles.forEach((tile, index) => {
+                zones[index].appendChild(tile);
+            });
+            saveGameState();
+        }
+    } else {
+        const shuffledTiles = [...tiles].sort(() => Math.random() - 0.5);
+        shuffledTiles.forEach((tile, index) => {
+            zones[index].appendChild(tile);
+        });
+        saveGameState();
+    }
 }
 
 let draggedTile = null;
@@ -140,6 +167,20 @@ function handleDrop(e) {
     }
 }
 
+function saveGameState() {
+    const zones = document.querySelectorAll('.drop-zone');
+    const state = [];
+    zones.forEach(zone => {
+        const tile = zone.querySelector('.tile');
+        if (tile) {
+            state.push(parseInt(tile.dataset.correctIndex));
+        } else {
+            state.push(null);
+        }
+    });
+    localStorage.setItem(`sinter_scramble_state_level_${currentLevel}`, JSON.stringify(state));
+}
+
 function placeTileInZone(tile, zone) {
     if (!tile || !zone) return;
 
@@ -151,6 +192,7 @@ function placeTileInZone(tile, zone) {
     }
 
     zone.appendChild(tile);
+    saveGameState();
     checkWin();
 }
 
@@ -298,6 +340,8 @@ function showWinModal() {
         continueBtn.onclick = () => {
             currentLevel++;
             localStorage.setItem('sinter_scramble_level', currentLevel);
+            // Clear state for the new level to ensure fresh shuffle
+            localStorage.removeItem(`sinter_scramble_state_level_${currentLevel}`);
             initGame();
         };
     } else {
