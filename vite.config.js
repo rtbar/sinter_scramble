@@ -4,7 +4,7 @@ export default defineConfig({
     root: './',
     publicDir: 'public',
     server: {
-        host: '127.0.0.1'
+        host: true
     },
     base: './',
     build: {

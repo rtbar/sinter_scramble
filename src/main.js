@@ -4,7 +4,6 @@ import './style.css';
 
 // Configuration
 const BOARD_SIZE = 3; // 3x3
-const TILE_SIZE = 150; // px
 
 // Load all photo_*.jpg files from assets
 const imageModules = import.meta.glob('./assets/photo_*.jpg', { eager: true, query: '?url', import: 'default' });
@@ -86,7 +85,7 @@ function initGame() {
         const col = i % BOARD_SIZE;
 
         tile.style.backgroundImage = `url(${currentImageUrl})`;
-        tile.style.backgroundPosition = `-${col * TILE_SIZE}px -${row * TILE_SIZE}px`;
+        tile.style.backgroundPosition = `${col * 50}% ${row * 50}%`;
 
         // Drag events
         tile.addEventListener('dragstart', handleDragStart);

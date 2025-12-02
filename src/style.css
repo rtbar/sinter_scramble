@@ -1,7 +1,4 @@
 :root {
-  --board-size: 450px;
-  /* 3x150px */
-  --tile-size: 150px;
   --gap: 2px;
   --bg-color: #1a1a1a;
   --primary-color: #FFD700;
@@ -16,15 +13,18 @@ body {
   background-color: var(--bg-color);
   margin: 0;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
   min-height: 100vh;
   color: var(--text-color);
+  padding-top: 2rem;
 }
 
 #app {
   text-align: center;
   padding: 20px;
+  width: 100%;
+  max-width: 1200px;
 }
 
 h1 {
@@ -41,6 +41,7 @@ h1 {
   flex-direction: column;
   align-items: center;
   gap: 2rem;
+  width: 100%;
 }
 
 .controls-container {
@@ -52,8 +53,10 @@ h1 {
 }
 
 .board {
-  width: var(--board-size);
-  height: var(--board-size);
+  width: 90vw;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  max-width: 450px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
@@ -82,10 +85,10 @@ h1 {
 
 
 .tile {
-  width: var(--tile-size);
-  height: var(--tile-size);
+  width: 100%;
+  height: 100%;
   cursor: grab;
-  background-size: var(--board-size) var(--board-size);
+  background-size: 300% 300%;
   transition: transform 0.2s;
   touch-action: none;
 }
@@ -127,6 +130,8 @@ h1 {
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
   border: 2px solid var(--accent-color);
   animation: popIn 0.3s ease-out;
+  width: 80%;
+  max-width: 400px;
 }
 
 @keyframes popIn {
