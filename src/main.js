@@ -45,6 +45,7 @@ const controlsContainerEl = document.getElementById('controls-container');
 const levelIndicatorEl = document.getElementById('level-indicator');
 
 let tiles = [];
+let activeTouchTile = null;
 
 function initGame() {
     // Update Level Indicator
@@ -90,6 +91,10 @@ function initGame() {
         // Drag events
         tile.addEventListener('dragstart', handleDragStart);
         tile.addEventListener('dragend', handleDragEnd);
+        tile.addEventListener('touchstart', handleTouchStart, { passive: false });
+        tile.addEventListener('touchmove', handleTouchMove, { passive: false });
+        tile.addEventListener('touchend', handleTouchEnd);
+        tile.addEventListener('touchcancel', handleTouchCancel);
 
         tiles.push(tile);
     }
@@ -125,22 +130,58 @@ function handleDrop(e) {
     const zone = e.target.closest('.drop-zone');
 
     if (zone && draggedTile) {
-        // Check if zone already has a tile
-        const existingTile = zone.querySelector('.tile');
-
-        if (existingTile) {
-            // Swap: Move existing tile to where dragged tile came from
-            const draggedParent = draggedTile.parentNode;
-            draggedParent.appendChild(existingTile);
-            zone.appendChild(draggedTile);
-        } else {
-            zone.appendChild(draggedTile);
-        }
-
-        checkWin();
+        placeTileInZone(draggedTile, zone);
     }
 }
 
+function placeTileInZone(tile, zone) {
+    if (!tile || !zone) return;
+
+    const existingTile = zone.querySelector('.tile');
+    const origin = tile.parentNode;
+
+    if (existingTile && origin) {
+        origin.appendChild(existingTile);
+    }
+
+    zone.appendChild(tile);
+    checkWin();
+}
+
+function handleTouchStart(e) {
+    if (e.touches.length !== 1) return;
+    activeTouchTile = e.currentTarget;
+    activeTouchTile.classList.add('dragging');
+    e.preventDefault();
+}
+
+function handleTouchMove(e) {
+    if (!activeTouchTile) return;
+    e.preventDefault();
+}
+
+function handleTouchEnd(e) {
+    if (!activeTouchTile) return;
+    e.preventDefault();
+
+    const touch = e.changedTouches[0];
+    const target = document.elementFromPoint(touch.clientX, touch.clientY);
+    const zone = target?.closest?.('.drop-zone');
+
+    activeTouchTile.classList.remove('dragging');
+
+    if (zone) {
+        placeTileInZone(activeTouchTile, zone);
+    }
+
+    activeTouchTile = null;
+}
+
+function handleTouchCancel() {
+    if (!activeTouchTile) return;
+    activeTouchTile.classList.remove('dragging');
+    activeTouchTile = null;
+}
 
 function checkWin() {
     const zones = document.querySelectorAll('.drop-zone');
