@@ -124,14 +124,15 @@ h1 {
 .modal-content {
   background-color: var(--bg-color);
   color: var(--primary-color);
-  padding: 2rem;
+  padding: 1.5rem;
   border-radius: 10px;
   text-align: center;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
   border: 2px solid var(--accent-color);
   animation: popIn 0.3s ease-out;
-  width: 80%;
+  width: 90%;
   max-width: 400px;
+  box-sizing: border-box;
 }
 
 @keyframes popIn {
