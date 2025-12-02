@@ -46,6 +46,8 @@ const levelIndicatorEl = document.getElementById('level-indicator');
 
 let tiles = [];
 let activeTouchTile = null;
+let touchOffsetX = 0;
+let touchOffsetY = 0;
 
 function initGame() {
     // Update Level Indicator
@@ -152,23 +154,52 @@ function handleTouchStart(e) {
     if (e.touches.length !== 1) return;
     activeTouchTile = e.currentTarget;
     activeTouchTile.classList.add('dragging');
+    
+    const touch = e.touches[0];
+    const rect = activeTouchTile.getBoundingClientRect();
+    touchOffsetX = touch.clientX - rect.left;
+    touchOffsetY = touch.clientY - rect.top;
+
+    // Set initial position for fixed positioning
+    activeTouchTile.style.position = 'fixed';
+    activeTouchTile.style.left = (touch.clientX - touchOffsetX) + 'px';
+    activeTouchTile.style.top = (touch.clientY - touchOffsetY) + 'px';
+    activeTouchTile.style.zIndex = '1000';
+    activeTouchTile.style.width = rect.width + 'px';
+    activeTouchTile.style.height = rect.height + 'px';
+    
     e.preventDefault();
 }
 
 function handleTouchMove(e) {
     if (!activeTouchTile) return;
     e.preventDefault();
+    
+    const touch = e.touches[0];
+    activeTouchTile.style.left = (touch.clientX - touchOffsetX) + 'px';
+    activeTouchTile.style.top = (touch.clientY - touchOffsetY) + 'px';
 }
 
 function handleTouchEnd(e) {
     if (!activeTouchTile) return;
     e.preventDefault();
 
+    // Temporarily hide the tile to find what's underneath
+    activeTouchTile.style.display = 'none';
     const touch = e.changedTouches[0];
     const target = document.elementFromPoint(touch.clientX, touch.clientY);
+    activeTouchTile.style.display = '';
+
     const zone = target?.closest?.('.drop-zone');
 
+    // Reset styles
     activeTouchTile.classList.remove('dragging');
+    activeTouchTile.style.position = '';
+    activeTouchTile.style.left = '';
+    activeTouchTile.style.top = '';
+    activeTouchTile.style.zIndex = '';
+    activeTouchTile.style.width = '';
+    activeTouchTile.style.height = '';
 
     if (zone) {
         placeTileInZone(activeTouchTile, zone);
@@ -179,7 +210,16 @@ function handleTouchEnd(e) {
 
 function handleTouchCancel() {
     if (!activeTouchTile) return;
+    
+    // Reset styles
     activeTouchTile.classList.remove('dragging');
+    activeTouchTile.style.position = '';
+    activeTouchTile.style.left = '';
+    activeTouchTile.style.top = '';
+    activeTouchTile.style.zIndex = '';
+    activeTouchTile.style.width = '';
+    activeTouchTile.style.height = '';
+    
     activeTouchTile = null;
 }
 
