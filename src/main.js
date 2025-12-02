@@ -154,7 +154,7 @@ function handleTouchStart(e) {
     if (e.touches.length !== 1) return;
     activeTouchTile = e.currentTarget;
     activeTouchTile.classList.add('dragging');
-    
+
     const touch = e.touches[0];
     const rect = activeTouchTile.getBoundingClientRect();
     touchOffsetX = touch.clientX - rect.left;
@@ -167,14 +167,14 @@ function handleTouchStart(e) {
     activeTouchTile.style.zIndex = '1000';
     activeTouchTile.style.width = rect.width + 'px';
     activeTouchTile.style.height = rect.height + 'px';
-    
+
     e.preventDefault();
 }
 
 function handleTouchMove(e) {
     if (!activeTouchTile) return;
     e.preventDefault();
-    
+
     const touch = e.touches[0];
     activeTouchTile.style.left = (touch.clientX - touchOffsetX) + 'px';
     activeTouchTile.style.top = (touch.clientY - touchOffsetY) + 'px';
@@ -210,7 +210,7 @@ function handleTouchEnd(e) {
 
 function handleTouchCancel() {
     if (!activeTouchTile) return;
-    
+
     // Reset styles
     activeTouchTile.classList.remove('dragging');
     activeTouchTile.style.position = '';
@@ -219,7 +219,7 @@ function handleTouchCancel() {
     activeTouchTile.style.zIndex = '';
     activeTouchTile.style.width = '';
     activeTouchTile.style.height = '';
-    
+
     activeTouchTile = null;
 }
 
